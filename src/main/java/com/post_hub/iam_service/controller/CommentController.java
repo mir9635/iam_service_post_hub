@@ -17,28 +17,30 @@ import java.util.Map;
 @RequestMapping("/comments")
 public class CommentController {
 
-    private CommentService commentService;
+    private final CommentService defaultCommentService;
+    private final CommentService advancedCommentService;
 
     @Autowired
-    @Qualifier("commentServiceImpl")
-    public void setCommentService(CommentService commentService) {
-        this.commentService = commentService;
+    public CommentController(CommentService defaultCommentService,
+                             @Qualifier("advancedCommentService") CommentService advancedCommentService) {
+        this.defaultCommentService = defaultCommentService;
+        this.advancedCommentService = advancedCommentService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<String> addComment(@RequestBody Map<String, Object> requestBody) {
+    @PostMapping("/createDefault")
+    public ResponseEntity<String> createDefaultComment(@RequestBody Map<String, Object> requestBody) {
         String content = (String) requestBody.get("content");
-        commentService.createComment(content);
+        defaultCommentService.createComment(content);
 
-        return new ResponseEntity<>("Comment added: " + content, HttpStatus.OK);
+        return new ResponseEntity<>("Default comment added: " + content, HttpStatus.OK);
     }
 
-    @PostMapping("/switchService")
-    public ResponseEntity<String> switchToSecondService(@RequestBody Map<String, Object> requestBody) {
-        this.commentService = new SecondCommentServiceImpl();
-        String content = (String) requestBody.get("content");
-        commentService.createComment(content);
+    @PostMapping("/createAdvancedComment")
+    public ResponseEntity<String> createAdvancedComment(@RequestBody Map<String, Object> requestBody) {
 
-        return new ResponseEntity<>("Switched to Second Comment added: " + content, HttpStatus.OK);
+        String content = (String) requestBody.get("content");
+        advancedCommentService.createComment(content);
+
+        return new ResponseEntity<>("Advanced comment added: " + content, HttpStatus.OK);
     }
 }
