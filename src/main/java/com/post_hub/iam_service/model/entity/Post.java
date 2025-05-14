@@ -27,4 +27,17 @@ public class Post {
 
     @Column(nullable = false, columnDefinition = "integer default 0")
     private Integer likes = 0;
+
+
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", created=" + created +
+                ", likes=" + likes +
+                '}';
+    }
 }
