@@ -18,4 +18,17 @@ public class PostSearchDTO implements Serializable {
     private Integer likes;
     private LocalDateTime created;
     private Boolean isDeleted;
+
+
+    @Override
+    public String toString() {
+        return "PostSearchDTO{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", likes=" + likes +
+                ", created=" + created +
+                ", isDeleted=" + isDeleted +
+                '}';
+    }
 }

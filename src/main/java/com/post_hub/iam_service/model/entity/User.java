@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -37,13 +38,28 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updated;
 
-    @Column
+    @Column()
     private LocalDateTime last_login;
 
-    @Column
+    @Column(nullable = false)
     private Boolean deleted = false;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "registration_status", nullable = false)
     private RegistrationStatus registrationStatus;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", created=" + created +
+                ", updated=" + updated +
+                ", last_login=" + last_login +
+                ", deleted=" + deleted +
+                ", registrationStatus=" + registrationStatus +
+                '}';
+    }
 }

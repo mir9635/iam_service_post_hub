@@ -17,4 +17,15 @@ public class PostDTO implements Serializable {
     private String content;
     private Integer likes;
     private LocalDateTime created;
+
+    @Override
+    public String toString() {
+        return "PostDTO{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", likes=" + likes +
+                ", created=" + created +
+                '}';
+    }
 }

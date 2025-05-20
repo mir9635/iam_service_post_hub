@@ -24,11 +24,11 @@ CREATE TABLE posts
 
 INSERT INTO users(username, password, email, created, updated, registration_status, last_login, deleted)
 VALUES ('first_user', 'password1', 'first_user@gmail.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'ACTIVE',
-        current_timestamp, false),
+        CURRENT_TIMESTAMP, false),
        ('second_user', 'password2', 'second_user@gmail.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'ACTIVE',
-        current_timestamp, false),
+        CURRENT_TIMESTAMP, false),
        ('third_user', 'password3', 'third_user@gmail.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'ACTIVE',
-        current_timestamp, false);
+        CURRENT_TIMESTAMP, false);
 
 INSERT INTO posts(title, content, created, updated, deleted, likes)
 VALUES ('First Post', 'This is content of the first post', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false, 10),
