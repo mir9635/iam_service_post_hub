@@ -40,16 +40,20 @@ public class Post {
     @Column(nullable = false)
     private Boolean deleted = false;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Override
-    public String toString() {
-        return "Post{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", created=" + created +
-                ", updated=" + updated +
-                ", likes=" + likes +
-                '}';
-    }
+
+//    @Override
+//    public String toString() {
+//        return "Post{" +
+//                "id=" + id +
+//                ", title='" + title + '\'' +
+//                ", content='" + content + '\'' +
+//                ", created=" + created +
+//                ", updated=" + updated +
+//                ", likes=" + likes +
+//                '}';
+//    }
 }
