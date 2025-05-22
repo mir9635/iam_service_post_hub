@@ -44,16 +44,7 @@ public class Post {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "created_by")
+    private String createdBy;
 
-//    @Override
-//    public String toString() {
-//        return "Post{" +
-//                "id=" + id +
-//                ", title='" + title + '\'' +
-//                ", content='" + content + '\'' +
-//                ", created=" + created +
-//                ", updated=" + updated +
-//                ", likes=" + likes +
-//                '}';
-//    }
 }

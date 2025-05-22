@@ -21,15 +21,15 @@ public class UserDTO implements Serializable {
 
     private RegistrationStatus registrationStatus;
 
-    @Override
-    public String toString() {
-        return "UserDTO{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", created=" + created +
-                ", lastLogin=" + lastLogin +
-                ", registrationStatus=" + registrationStatus +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "UserDTO{" +
+//                "id=" + id +
+//                ", username='" + username + '\'' +
+//                ", email='" + email + '\'' +
+//                ", created=" + created +
+//                ", lastLogin=" + lastLogin +
+//                ", registrationStatus=" + registrationStatus +
+//                '}';
+//    }
 }

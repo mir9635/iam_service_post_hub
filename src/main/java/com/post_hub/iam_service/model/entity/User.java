@@ -52,18 +52,5 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
 
-//    @Override
-//    public String toString() {
-//        return "User{" +
-//                "id=" + id +
-//                ", username='" + username + '\'' +
-//                ", password='" + password + '\'' +
-//                ", email='" + email + '\'' +
-//                ", created=" + created +
-//                ", updated=" + updated +
-//                ", last_login=" + last_login +
-//                ", deleted=" + deleted +
-//                ", registrationStatus=" + registrationStatus +
-//                '}';
-//    }
+
 }

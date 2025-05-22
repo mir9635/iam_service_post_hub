@@ -12,14 +12,15 @@ CREATE TABLE users
 );
 CREATE TABLE posts
 (
-    id      BIGSERIAL PRIMARY KEY,
-    user_id INTEGER      NOT NULL,
-    title   VARCHAR(255) NOT NULL,
-    content TEXT         NOT NULL,
-    created TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted BOOLEAN      NOT NULL DEFAULT false,
-    likes   INTEGER      NOT NULL DEFAULT 0,
+    id         BIGSERIAL PRIMARY KEY,
+    user_id    INTEGER      NOT NULL,
+    title      VARCHAR(255) NOT NULL,
+    content    TEXT         NOT NULL,
+    created    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted    BOOLEAN      NOT NULL DEFAULT false,
+    likes      INTEGER      NOT NULL DEFAULT 0,
+    created_by VARCHAR(50),
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     UNIQUE (title)
 );
