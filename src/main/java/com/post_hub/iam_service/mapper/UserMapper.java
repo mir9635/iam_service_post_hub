@@ -1,17 +1,23 @@
 package com.post_hub.iam_service.mapper;
 
 import com.post_hub.iam_service.model.dto.user.UserDTO;
+import com.post_hub.iam_service.model.dto.user.UserSearchDTO;
 import com.post_hub.iam_service.model.entity.User;
 import com.post_hub.iam_service.model.enums.RegistrationStatus;
 import com.post_hub.iam_service.model.request.user.NewUserRequest;
+import com.post_hub.iam_service.model.request.user.UpdateUserRequest;
+import org.hibernate.type.descriptor.DateTimeUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+
+import java.util.Objects;
 
 @Mapper(
         componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-        imports = {RegistrationStatus.class, Object.class}
+        imports = {RegistrationStatus.class, Objects.class, DateTimeUtils.class}
 )
 public interface UserMapper {
 
@@ -21,5 +27,15 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "created", ignore = true)
     @Mapping(target = "registrationStatus", expression = "java(RegistrationStatus.ACTIVE)")
-    User createUser(NewUserRequest newUserRequest);
+    User createUser(NewUserRequest request);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "created", ignore = true)
+    void updateUser(@MappingTarget User user, UpdateUserRequest request);
+
+    @Mapping(source = "deleted", target = "isDeleted")
+    UserSearchDTO toUserSearchDto(User user);
+
+
 }
+
