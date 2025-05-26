@@ -17,7 +17,7 @@ import com.post_hub.iam_service.repository.RoleRepository;
 import com.post_hub.iam_service.repository.UserRepository;
 import com.post_hub.iam_service.repository.criteria.UserSearchCriteria;
 import com.post_hub.iam_service.service.UserService;
-import com.post_hub.iam_service.service.mode.IamServiceUserRole;
+import com.post_hub.iam_service.service.model.IamServiceUserRole;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
