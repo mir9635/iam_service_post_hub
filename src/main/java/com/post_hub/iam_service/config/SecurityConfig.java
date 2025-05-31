@@ -30,10 +30,12 @@ public class SecurityConfig {
     private final JwtRequestFilter jwtRequestFilter;
 
     private static final String POST = "POST";
+    private static final String GET = "GET";
 
     private static final AntPathRequestMatcher[] NOT_SECURED_URLS = new AntPathRequestMatcher[] {
             new AntPathRequestMatcher("/auth/login", POST),
             new AntPathRequestMatcher("/auth/register", POST),
+            new AntPathRequestMatcher("/auth/refresh/token", GET),
     };
 
     @Bean
