@@ -45,15 +45,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public IamResponse<PostDTO> createPost(@NotNull Integer userId, NewPostRequest newPostRequest) {
+    public IamResponse<PostDTO> createPost(@NotNull NewPostRequest newPostRequest, String username) {
         if (postRepository.existsByTitle(newPostRequest.getTitle())) {
             throw new DataExistException(ApiErrorMessage.POST_ALREADY_EXISTS.getMessage(newPostRequest.getTitle()));
         }
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException(ApiErrorMessage.POST_NOT_FOUND_BY_ID.getMessage(userId)));
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USERNAME_NOT_FOUND.getMessage(username)));
 
-        Post post = postMapper.createPost(newPostRequest, user);
+        Post post = postMapper.createPost(newPostRequest);
+        post.setUser(user);
+        post.setCreatedBy(username);
         Post savedPost = postRepository.save(post);
         PostDTO postDTO = postMapper.toPostDTO(savedPost);
 
