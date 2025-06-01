@@ -3,6 +3,7 @@ package com.post_hub.iam_service.advice;
 
 import com.post_hub.iam_service.model.constants.ApiConstants;
 import com.post_hub.iam_service.model.exception.DataExistException;
+import com.post_hub.iam_service.model.exception.InvalidPasswordException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,6 +40,13 @@ public class CommonControllerAdvice {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(ex.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus
+    @ResponseBody
+    public String handleInvalidPasswordException(InvalidPasswordException ex) {
+        return ex.getMessage();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
