@@ -16,6 +16,7 @@ import com.post_hub.iam_service.model.response.PaginationResponse;
 import com.post_hub.iam_service.repository.RoleRepository;
 import com.post_hub.iam_service.repository.UserRepository;
 import com.post_hub.iam_service.repository.criteria.UserSearchCriteria;
+import com.post_hub.iam_service.security.validation.AccessValidator;
 import com.post_hub.iam_service.service.UserService;
 import com.post_hub.iam_service.service.model.IamServiceUserRole;
 import jakarta.validation.constraints.NotNull;
@@ -41,6 +42,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final AccessValidator accessValidator;
 
     @Override
     public IamResponse<UserDTO> getById(@NotNull Integer userId) {
@@ -52,20 +54,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public IamResponse<UserDTO> createUser(@NotNull NewUserRequest newUserRequest) {
-        if (userRepository.existsByUsername(newUserRequest.getUsername())) {
-            throw new DataExistException(ApiErrorMessage.USERNAME_ALREADY_EXISTS.getMessage(newUserRequest.getUsername()));
+    public IamResponse<UserDTO> createUser(@NotNull NewUserRequest request) {
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new DataExistException(ApiErrorMessage.USERNAME_ALREADY_EXISTS.getMessage(request.getUsername()));
         }
 
-        if (userRepository.existsByEmail(newUserRequest.getEmail())) {
-            throw new DataExistException(ApiErrorMessage.EMAIL_ALREADY_EXISTS.getMessage(newUserRequest.getEmail()));
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new DataExistException(ApiErrorMessage.EMAIL_ALREADY_EXISTS.getMessage(request.getEmail()));
         }
 
         Role userRole = roleRepository.findByName(IamServiceUserRole.USER.getRole())
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_ROLE_NOT_FOUND.getMessage()));
 
-        User user = userMapper.createUser(newUserRequest);
-        user.setPassword(passwordEncoder.encode(newUserRequest.getPassword()));
+        User user = userMapper.createUser(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         Set<Role> roles = new HashSet<>();
         roles.add(userRole);
         user.setRoles(roles);
@@ -79,6 +81,15 @@ public class UserServiceImpl implements UserService {
     public IamResponse<UserDTO> updateUser(Integer userId, UpdateUserRequest request) {
         User user = userRepository.findByIdAndDeletedFalse(userId)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_NOT_FOUND_BY_ID.getMessage(userId)));
+
+        accessValidator.validateAdminOrOwnerAccess(userId);
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new DataExistException(ApiErrorMessage.USERNAME_ALREADY_EXISTS.getMessage(request.getUsername()));
+        }
+
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new DataExistException(ApiErrorMessage.EMAIL_ALREADY_EXISTS.getMessage(request.getEmail()));
+        }
 
         userMapper.updateUser(user, request);
         user.setUpdated(LocalDateTime.now());
@@ -94,12 +105,12 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByIdAndDeletedFalse(userId)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_NOT_FOUND_BY_ID.getMessage(userId)));
 
+        accessValidator.validateAdminOrOwnerAccess(userId);
 
         user.setDeleted(true);
         userRepository.save(user);
 
     }
-
 
 
     @Override
