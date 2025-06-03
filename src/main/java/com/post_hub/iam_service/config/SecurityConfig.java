@@ -2,7 +2,9 @@ package com.post_hub.iam_service.config;
 
 
 import com.post_hub.iam_service.security.filter.JwtRequestFilter;
+import com.post_hub.iam_service.security.handler.AccessRestrictionHandler;
 import com.post_hub.iam_service.service.UserService;
+import com.post_hub.iam_service.service.model.IamServiceUserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +30,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtRequestFilter jwtRequestFilter;
+    private final AccessRestrictionHandler accessRestrictionHandler;
 
     private static final String POST = "POST";
     private static final String GET = "GET";
@@ -45,10 +48,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(NOT_SECURED_URLS).permitAll()
+//                        .requestMatchers(get("/users/all")).hasAnyAuthority(adminAccessSecurityRoles())
+//                        .requestMatchers(get("/posts/all")).hasAnyAuthority(adminAccessSecurityRoles())
+                        .requestMatchers(post("/users/create")).hasAnyAuthority(adminAccessSecurityRoles())
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                        .accessDeniedHandler(accessRestrictionHandler)
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -71,5 +78,20 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    private String[] adminAccessSecurityRoles() {
+        return new String[] {
+                IamServiceUserRole.SUPER_ADMIN.name(),
+                IamServiceUserRole.ADMIN.name()
+        };
+    }
+
+    private static AntPathRequestMatcher get(String pattern) {
+        return new AntPathRequestMatcher(pattern, GET);
+    }
+
+    private static AntPathRequestMatcher post(String pattern) {
+        return new AntPathRequestMatcher(pattern, POST);
     }
 }
