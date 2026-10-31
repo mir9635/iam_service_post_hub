@@ -1,0 +1,74 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.1.2'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.post_hub'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(27)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'org.postgresql:postgresql'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testCompileOnly 'org.projectlombok:lombok'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+}
+
+// 1. Определяем профиль. По умолчанию 'local-idea' (как в вашем pom.xml)
+def activeProfile = project.findProperty('profile') ?: 'local-idea'
+def envName = activeProfile
+def skipTests = true // В вашем pom.xml skipTests=true для обоих профилей
+
+// 2. Настраиваем задачу test (аналог skipTests)
+tasks.named('test') {
+	useJUnitPlatform()
+	// Если skipTests = true, задача будет пропущена (но не упадет с ошибкой)
+	onlyIf { !skipTests }
+}
+
+// 3. Передаем профиль в Spring Boot при запуске (bootRun)
+tasks.named('bootRun') {
+	systemProperty 'spring.profiles.active', activeProfile
+	// Можно также передать envName, если он используется в коде
+	systemProperty 'env.name', envName
+}
+
+// 4. Передаем профиль в тесты (если они будут запускаться)
+tasks.named('test') {
+	systemProperty 'spring.profiles.active', activeProfile
+}
+
+// 5. (Опционально) Вывод информации при сборке
+tasks.register('printProfile') {
+	doLast {
+		println "----------------------------------------"
+		println "Активный профиль: $activeProfile"
+		println "Имя окружения (envName): $envName"
+		println "Тесты пропускаются: $skipTests"
+		println "Файл свойств: src/main/resources/application-${activeProfile}.properties"
+		println "----------------------------------------"
+	}
+}
+
+// Привязываем вывод к процессу сборки (чтобы видеть, какой профиль активен)
+tasks.named('compileJava') {
+	dependsOn 'printProfile'
+}
