@@ -62,10 +62,10 @@ tasks.named('test') {
 tasks.register('printProfile') {
 	doLast {
 		println "----------------------------------------"
-		println "Активный профиль: $activeProfile"
-		println "Имя окружения (envName): $envName"
-		println "Тесты пропускаются: $skipTests"
-		println "Файл свойств: src/main/resources/application-${activeProfile}.properties"
+		println "Active profile: $activeProfile"
+		println "Environment name (envName): $envName"
+		println "The tests are skipped.: $skipTests"
+		println "Properties file: src/main/resources/application-${activeProfile}.properties"
 		println "----------------------------------------"
 	}
 }
